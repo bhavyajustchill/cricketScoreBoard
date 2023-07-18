@@ -8,3 +8,8 @@ cricketScoreBoard
 - Design Updated
 - This Over is functional but doesn't show the last ball score
 - Added a new Start New Game to Reset the Scoreboard
+
+# 18/7/2023 Commit 2
+
+- Checkboxes partially functional (All possibilities remaining to be handled like real world cricket)
+- Slightly adjusted UI

@@ -119,6 +119,10 @@ const Cricket = () => {
     //balls count
     //setBalls(balls + 1)
     //setData({ ...data, "ball": data.ball + 1, "score": data.score + e })
+    let checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach((checkbox) => {
+      checkbox.checked = false;
+    });
     console.log(data.ball);
     if (over.length === 5) {
       setOver([]);
@@ -178,6 +182,7 @@ const Cricket = () => {
       //setBowler(parseInt(bowlerIndex))
       //setData({ ...data, "ball": parseInt(bowlerIndex) })
       tempdata.bowler = parseInt(bowlerIndex);
+
       console.log(bowlerIndex);
     }
     //console.log(teamA)
@@ -191,19 +196,42 @@ const Cricket = () => {
     setTeamB(temp2);
     setData(tempdata);
   };
+  const handleCheckboxChange = (e) => {
+    //TODO handle all possibilities like real world cricket
+
+    const { name, checked } = e.target;
+
+    let scoreIncrement = 0;
+    if (name === "wide" && checked) {
+      scoreIncrement = 1;
+    } else if (name === "noBall" && checked) {
+      scoreIncrement = 2;
+    } else if (name === "bye" && checked) {
+      scoreIncrement = 1;
+    } else if (name === "legBye" && checked) {
+      scoreIncrement = 1;
+    } else if (name === "wicket" && checked) {
+      scoreIncrement = 1;
+    }
+
+    setData((prevData) => ({
+      ...prevData,
+      score: prevData.score + scoreIncrement,
+    }));
+  };
 
   return (
     <>
       <div
-        className="container mt-5"
+        className="container mt-2"
         style={{
           background: "linear-gradient(160deg, #667eea, #764ba2)",
           padding: "90px",
-          borderRadius: "10px",
+          borderRadius: "50px",
         }}>
         <div className="row">
           <div className="col-md-12 text-center">
-            <h3 className="text-light fw-bold">
+            <h3 className="text-light fw-bold mb-5">
               {teamNameA} :{" "}
               <span>
                 {data.score}/{data.wicket} ({calculation_over(data.ball)}/20)
@@ -213,7 +241,18 @@ const Cricket = () => {
         </div>
         <div className="row">
           <div className="col-md-6 text-center border">
-            <h4 className="text-start text-light fw-bolder mt-2">Batsmen</h4>
+            <h4 className="text-start text-light fw-bolder mt-2">
+              <div className="d-flex justify-content-between">
+                Batsmen{" "}
+                <span className="fw-normal bg-success text-light rounded px-3 py-1">
+                  On Pitch(Runs)
+                </span>{" "}
+                |{" "}
+                <span className="fw-normal bg-danger text-light rounded px-3 py-1">
+                  Off Pitch(Runs)
+                </span>
+              </div>
+            </h4>
             <hr className="text-light" />
             <div className="d-flex justify-content-between">
               <h2 className="bg-success text-light px-4 py-2 rounded mb-3">
@@ -225,11 +264,18 @@ const Cricket = () => {
             </div>
           </div>
           <div className="col-md-6 text-center border">
-            <h4 className="text-start text-light fw-bolder mt-2">Bowler</h4>
+            <h4 className="text-start text-light fw-bolder mt-2">
+              <div className="d-flex justify-content-between">
+                Bowler
+                <span className="fw-normal bg-light text-dark rounded mx-2 px-3 py-1">
+                  Name (Wickets - Runs)
+                </span>
+              </div>
+            </h4>
             <hr className="text-light" />
             <div className="d-flex justify-content-center">
               <h2 className="bg-light py-2 text-dark px-5 rounded mb-3">
-                {teamB[data.bowler].name} ({teamB[data.bowler].Balls} | {teamB[data.bowler].Runs})
+                {teamB[data.bowler].name} ({teamB[data.bowler].Balls} - {teamB[data.bowler].Runs})
               </h2>
             </div>
           </div>
@@ -244,23 +290,63 @@ const Cricket = () => {
         <div className="row mt-5">
           <div className="d-flex justify-content-around text-light">
             <h5 className="mt-1">
-              <input type="checkbox" name="wide" /> Wide
+              <input
+                type="checkbox"
+                className="chkBox"
+                onChange={(e) => {
+                  handleCheckboxChange(e);
+                }}
+                name="wide"
+              />{" "}
+              Wide
             </h5>
 
             <h5 className="mt-1">
-              <input type="checkbox" name="noBall" /> NoBall
+              <input
+                type="checkbox"
+                className="chkBox"
+                onChange={(e) => {
+                  handleCheckboxChange(e);
+                }}
+                name="noBall"
+              />{" "}
+              NoBall
             </h5>
 
             <h5 className="mt-1">
-              <input type="checkbox" name="bye" /> Bye
+              <input
+                type="checkbox"
+                className="chkBox"
+                onChange={(e) => {
+                  handleCheckboxChange(e);
+                }}
+                name="bye"
+              />{" "}
+              Bye
             </h5>
 
             <h5 className="mt-1">
-              <input type="checkbox" name="legBye" /> LegBye
+              <input
+                type="checkbox"
+                className="chkBox"
+                onChange={(e) => {
+                  handleCheckboxChange(e);
+                }}
+                name="legBye"
+              />{" "}
+              LegBye
             </h5>
 
             <h5 className="mt-1">
-              <input type="checkbox" name="wicket" /> Wicket
+              <input
+                type="checkbox"
+                className="chkBox"
+                onChange={(e) => {
+                  handleCheckboxChange(e);
+                }}
+                name="wicket"
+              />{" "}
+              Wicket
             </h5>
             <button type="button" className="btn btn-danger mx-2">
               Undo
@@ -284,10 +370,11 @@ const Cricket = () => {
               return (
                 <button
                   type="button"
-                  className="btn btn-danger btn-lg rounded-circle ms-4"
+                  className="btn btn-success btn-lg rounded-circle ms-4 fw-bolder"
                   key={i}
                   style={{
-                    background: "linear-gradient(45deg, #ed0d15, #f0bfb1)",
+                    background:
+                      "linear-gradient(45deg, rgba(0,0,0,0.5) 0%, #01b084 35%, #233f9b 100%)",
                   }}
                   onClick={() => handleRuns(e)}>
                   {e}
